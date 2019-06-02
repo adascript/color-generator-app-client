@@ -33,9 +33,9 @@ export default {
   },
   methods: {
     getColor() {
-      fetch("http://localhost:5001/generate-color")
+      fetch("https://color-app-generator-backend.herokuapp.com/generate-color")
         .then(response => {
-          fetch("http://localhost:5001/get-all-colors")
+          fetch("https://color-app-generator-backend.herokuapp.com/get-all-colors")
           .then(response => response.json())
           .then(data => this.historicalColors = data.colors)
         return response.json();
