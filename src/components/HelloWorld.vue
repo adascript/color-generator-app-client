@@ -28,7 +28,8 @@ export default {
     return {
       response: '',
       hex: "",
-      historicalColors: []
+      historicalColors: [],
+      sortOrder: "new"
     };
   },
   methods: {
@@ -37,18 +38,31 @@ export default {
         .then(response => {
           fetch("https://color-app-generator-backend.herokuapp.com/get-all-colors")
           .then(response => response.json())
-          .then(data => this.historicalColors = data.colors)
+          .then(data => {
+            let sortedColors = [...data.colors];
+            if (this.sortOrder == "new") {
+              sortedColors.sort((a, b) => a.timestamp < b.timestamp ? 1 : -1);
+            }
+            this.historicalColors = sortedColors;
+          }) 
         return response.json();
       }).then(data => {
         this.hex = `${data.color.hex}`;
       });
     },
     sortNewestFirst() {
+      this.sortOrder = "new";
       this.historicalColors.sort((a, b) => a.timestamp < b.timestamp ? 1 : -1);
     },
     sortOldestFirst() {
+      this.sortOrder = "old";
       this.historicalColors.sort((a, b) => a.timestamp > b.timestamp ? 1 : -1);
     }
+  },
+  beforeMount() {
+    fetch("https://color-app-generator-backend.herokuapp.com/get-all-colors")
+          .then(response => response.json())
+          .then(data => this.historicalColors = data.colors)
   }
 }
 </script>
